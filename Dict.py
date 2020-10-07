@@ -24,14 +24,12 @@ class Db:
         self._loader(self.name)
         value = self.dict.get(key, "empty")
         return value
-        #print("read: {} : {} ".format(key,value))
 
     def _write(self,key,value):
         self.dict[key] = value
         with open(self.name,"wb") as file:
             pickle.dump(self.dict, file)
         print("wrote: {} = {} ".format(key,value))
-        #print("whole database: " + str(self.dict))
 
 class SecDb(Db):
     def __init__(self,name,):
@@ -41,29 +39,6 @@ class SecDb(Db):
         self.readLock = threading.Lock()
         self.readerCount = 0
         self.viewLock = threading.Lock()
-
-    def _read(self,key):
-        '''
-        self.semaphore.acquire()
-        self.mutex.acquire()
-        self.mutex.release()
-        super()._read(key)
-        print("Reading...")
-        #time.sleep(0.5)
-        self.semaphore.release()
-        '''
-
-
-        '''
-        def _write(self,key,value):
-        super()._write(key,value)
-        print("Writing...")
-        time.sleep(1)
-        '''
-
-
-            #except threading.ThreadError:
-                #print("content is currently occupied...")
 
     def write(self, Range):
         self.writeLock.acquire()
@@ -85,7 +60,6 @@ class SecDb(Db):
 
         self.semaphore.acquire()
 
-
         self.readLock.acquire()
         self.readerCount += 1
         if self.readerCount == 1 : self.writeLock.acquire()
@@ -101,11 +75,6 @@ class SecDb(Db):
             self.readerCount -= 1
             self.readLock.release()
             if self.readerCount == 0: self.writeLock.release()
-
-
-
-
-
 
 
 
